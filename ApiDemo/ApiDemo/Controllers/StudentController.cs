@@ -3,38 +3,21 @@ using Microsoft.AspNetCore.Mvc;
 namespace ApiDemo.Controllers
 {
     [ApiController] // Attributes
-    [Route("[controller]")]  
-    public class WeatherForecastController : ControllerBase 
+    [Route("student")]   
+    public class StudentController : ControllerBase 
     {
-        // get , post -> Retriving Data Difference 
-        // API , REST API  , GraphQL , Sockets
-        // FROM Body , From Query , Custom Attribute 
-        // in out ref
+
         //  a new end point will have : http Method , pathname , code to execute
-        private static  string[] Summaries =
-        [
-            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Balmy", "Hot", "Sweltering", "Scorching"
-        ];
 
-        // store the students 
-        public static List<Student> students = new List<Student>();
+        [HttpGet("Hello")] // Testing Route
 
-
-        [HttpGet(Name = "GetWeatherForecast")]
-        
-        public IEnumerable<WeatherForecast> Get() 
+        public string Hello()
         {
-            //return "";
-            //WeatherForecastController.
-            //return [1, 2, 3, 4];
-            return Enumerable.Range(1, 4).Select(index => new WeatherForecast
-            {
-                Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-                TemperatureC = Random.Shared.Next(-20, 55),
-                Summary = Summaries[Random.Shared.Next(Summaries.Length)],
-            }) 
-            .ToArray();
-        }
+            return "Hello from Student API"; 
+		}
+		// store the students 
+		public static List<Student> students = new List<Student>();
+
 
         [HttpPost("add-student")] // post request to add the student
         public IActionResult AddStudent([FromBody] Student student)
@@ -70,9 +53,9 @@ namespace ApiDemo.Controllers
 
         }
 
-        [HttpGet("students")]
-       
-        public IActionResult DisplayStudents()
+        [HttpGet("get-students")] // get all students
+
+		public IActionResult DisplayStudents()
         {
 
             if (students.Count == 0) {
@@ -91,7 +74,7 @@ namespace ApiDemo.Controllers
 			});
         }
 
-        [HttpPatch("edit-student/{id}")]  // edit student by id
+        [HttpPatch("edit-student/{id}")]  // edit student by id by URl
         public IActionResult EditStudentById(int id , [FromBody] Student student) 
         {
 			if (students.Count == 0)
@@ -134,5 +117,58 @@ namespace ApiDemo.Controllers
             });
 
         }
-    }
+
+        [HttpGet("get-student")] // get student by query param
+                                 
+        public IActionResult GetStudentById([FromQuery] int id)
+        {
+			// id is not provided
+			if (string.IsNullOrWhiteSpace(id.ToString()))
+            {
+                return BadRequest( new ApiResponse<Student>
+                {
+                    Message = "Id Is Required",
+                    Data = null
+                });
+            }
+			// id is negative or zero   
+			if (id <= 0)
+            {
+                return BadRequest( new ApiResponse<Student>
+                {
+                    Message = "Id Must Be Positive",
+                    Data = null
+                });
+            }
+
+			// not found cases
+			if (students.Count == 0)
+            {
+                // data not found
+                return NotFound(new ApiResponse<List<Student>>
+                {
+                    Message = "No Students Found",
+                    Data = null
+                });
+            }
+            // Checking whether student is exist or not with given id
+            Student student = students.FirstOrDefault(student => student.studentId == id); 
+              if(student == null)
+            {
+                    return NotFound(new ApiResponse<Student>
+                    {
+                        Message = $"No Student Found With The Id : {id}",
+                        Data = null
+                    });
+            }
+			// successfull retrive operation
+
+			return Ok(new ApiResponse<Student>
+              {
+                  Message = "Student Fetched Succesfully",
+                  Data = student
+              });
+
+        }
+	}
 }

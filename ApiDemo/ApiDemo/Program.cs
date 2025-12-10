@@ -45,6 +45,10 @@ namespace ApiDemo
 				status = 404
 			})); // un handled route
 
+			app.Urls.Clear();
+			app.Urls.Add("http://localhost:5098");
+			app.Urls.Add("https://localhost:7242");
+
 			app.Run(); 
 			// This runs your API.
 		}
