@@ -1,4 +1,6 @@
 
+using ApiDemo.Services;
+
 namespace ApiDemo
 {
     public class Program
@@ -9,11 +11,14 @@ namespace ApiDemo
             // Registers services (like controllers, Swagger, logging, etc.)
 
 			
-			builder.Services.AddControllers();   
+			builder.Services.AddControllers();    
 			// I want to use Controllers in my API.
 
-			builder.Services.AddOpenApi();  
+			builder.Services.AddOpenApi();
 			// adds OpenAPI/Swagger support to your API.
+
+			// 
+			builder.Services.AddSingleton<StudentService>(); 
 
 			var app = builder.Build();
 			// Construction completed. App is ready to run.” 
@@ -38,8 +43,9 @@ namespace ApiDemo
 			app.MapControllers();
 			// Use all the controllers to handle HTTP requests.
 
+			// /student/register 
+			// /studnet/registe -> 
 
-			
 
 			app.Urls.Clear();
 			app.Urls.Add("http://localhost:5098");
