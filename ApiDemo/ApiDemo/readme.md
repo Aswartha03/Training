@@ -1,6 +1,3 @@
-// get , post -> Retriving Data Difference 
-// API , REST API  , GraphQL , Sockets
-
 
 From Body , From Query
 

@@ -39,15 +39,17 @@ namespace ApiDemo
 			// Use all the controllers to handle HTTP requests.
 
 
+			
+
+			app.Urls.Clear();
+			app.Urls.Add("http://localhost:5098");
+			app.Urls.Add("https://localhost:7242");
+
 			app.MapFallback(() => Results.NotFound(new
 			{
 				message = "Route Not Found",
 				status = 404
 			})); // un handled route
-
-			app.Urls.Clear();
-			app.Urls.Add("http://localhost:5098");
-			app.Urls.Add("https://localhost:7242");
 
 			app.Run(); 
 			// This runs your API.

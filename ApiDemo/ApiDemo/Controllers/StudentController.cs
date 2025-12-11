@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ApiDemo.Controllers
 {
-    [ApiController] // Attributes
+    [ApiController] // Attributes 
     [Route("student")]
     public class StudentController : ControllerBase
     {
@@ -11,9 +11,88 @@ namespace ApiDemo.Controllers
 
         // store the students 
         public static List<Student> students = new List<Student>();
+        // storing the Register students
+        public static List<Login> loginStudents = new List<Login>();
 
 
-        [HttpPost("add-student")] // post request to add the student
+		// register student endpoint
+		[HttpPost("register")]
+        public IActionResult RegisterStudent([FromBody] Login login)
+        {
+            if (string.IsNullOrWhiteSpace(login.Username))
+            {
+                return BadRequest(new ApiResponse<Login>
+                {
+                    Message = "Username is Required",
+                    Data = null
+                });
+            }
+            if (string.IsNullOrWhiteSpace(login.Password))
+            {
+                return BadRequest(new ApiResponse<Login>
+                {
+                    Message = "Password is Required",
+                    Data = null
+                });
+            }
+            if(string.IsNullOrWhiteSpace(login.Name))
+            {
+                return BadRequest(new ApiResponse<Login>
+                {
+                    Message = "Name is Required",
+                    Data = null
+                });
+			}
+
+			loginStudents.Add(login);
+
+            return Created("", new ApiResponse<Login>
+            {
+                Message = "User Registered Successfully",
+                Data = login
+            });
+		}
+
+		// login endpoint
+
+		[HttpPost("login")]
+
+        public IActionResult LoginStudent([FromBody] Login login)
+        {
+			// We will get username and password from the body 
+
+			if (string.IsNullOrWhiteSpace(login.Username))
+            {
+                return BadRequest(new ApiResponse<Login>
+                {
+                    Message = "Username is Required",
+                    Data = null
+                });
+            }
+            if (string.IsNullOrWhiteSpace(login.Password))
+            {
+                return BadRequest(new ApiResponse<Login>
+                {
+                    Message = "Password is Required",
+                    Data = null
+                });
+            }
+
+            Login studentExist = loginStudents.FirstOrDefault(student => student.Username == login.Username && student.Password == login.Password);
+            //Console.WriteLine(studentExist);
+            if (studentExist == null)
+            {
+                return NotFound(new ApiResponse<Login>
+                {
+                    Message = "Invalid Username or Password",
+                    Data = null
+                });
+            }
+            return "Hello";
+            //return Ok(studentExist);
+		}
+
+		[HttpPost("add-student")] // post request to add the student
         public IActionResult AddStudent([FromBody] Student student)
         {
 
@@ -31,13 +110,15 @@ namespace ApiDemo.Controllers
                 return BadRequest(new ApiResponse<Student>
                 {
                     Message = "Age Must be Positive",
-                    Data = null
+                    Data = null 
                 });
             }
+
             // find and setting  the id manually 
-            int currentId = students.Count() > 0 ? students.Max(s => s.studentId) : 0;
+            int currentId = students.Count() > 0 ? students[students.Count()-1].studentId : 0;
             student.studentId = currentId + 1;
             students.Add(student);
+
             // succesfully added
             return Created("", new ApiResponse<Student>
             {
@@ -190,7 +271,7 @@ namespace ApiDemo.Controllers
                 {
                     Message = $"No Student Exist With The Id : {id} To Delete",
                     Data = null
-                });
+                }); 
             }
 
             students.Remove(student);
