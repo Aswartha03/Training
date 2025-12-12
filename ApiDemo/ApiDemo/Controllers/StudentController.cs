@@ -13,7 +13,11 @@ namespace ApiDemo.Controllers
         public static List<Student> students = new List<Student>();
 
 
+<<<<<<< Updated upstream
         [HttpPost("add-student")] // post request to add the student
+=======
+		[HttpPost("add-student")] // post request to add the student
+>>>>>>> Stashed changes
         public IActionResult AddStudent([FromBody] Student student)
         {
 
@@ -136,8 +140,13 @@ namespace ApiDemo.Controllers
                 });
             }
 
+<<<<<<< Updated upstream
             // not found cases
             if (students.Count == 0)
+=======
+            var response = _studentService.GetStudentById(id);
+            if(response.Message == "Student Not Found")
+>>>>>>> Stashed changes
             {
                 // data not found
                 return NotFound(new ApiResponse<List<Student>>
