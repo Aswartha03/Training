@@ -1,3 +1,5 @@
 <Solution>
+  <Project Path="ApiDemo.Core/ApiDemo.Core.csproj" Id="2e9f553c-1309-42b9-9c06-c51b90d5ffd6" />
+  <Project Path="ApiDemo.Infrastructure/ApiDemo.Infrastructure.csproj" Id="0ed19925-7669-40a5-80dd-3c409c833985" />
   <Project Path="ApiDemo/ApiDemo.csproj" />
 </Solution>

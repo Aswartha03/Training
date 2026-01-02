@@ -1,4 +1,4 @@
-﻿namespace ApiDemo
+﻿namespace ApiDemo.Core.Models.ResponseModels
 {
     public class ApiResponse<T>
     {
